@@ -1,26 +1,18 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import {useApiGetMovies} from './effects/useApi'
+import FavoriteMovies from './components/FavoriteMovies'
 
-function App() {
+const App = () => {
+  const [movies, isLoading, isError] = useApiGetMovies([])
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      {isError ? <p>Error fetching data...</p> : ''}
+      {isLoading || movies.length === 0
+        ? <p>Loading...</p>
+        : <FavoriteMovies props={movies}/>
+      }
     </div>
-  );
+  )
 }
 
 export default App;
