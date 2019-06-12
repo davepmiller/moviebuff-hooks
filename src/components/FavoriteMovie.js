@@ -1,32 +1,37 @@
 import React, {useState} from 'react'
 
-const FavoriteMovie = ({movie, onDelete}) => {
-  const [name, setName] = useState(movie.name)
-  const [genre, setGenre] = useState(movie.genre)
-  const [rating, setRating] = useState(movie.rating)
+const FavoriteMovie = ({initialMovie, onDelete, genres}) => {
+  const [movie, setMovie] = useState(initialMovie)
   return (
     <form onSubmit={event => {
-      console.log('DELETE')
-      onDelete(name)
       event.preventDefault()
+      onDelete(movie.name)
     }}>
-      <input 
+      <input
         type='text'
-        value={name}
+        value={movie.name}
         placeholder='Name'
-        onChange={event => setName(event.target.value)}
+        onChange={event => setMovie({
+          ...movie,
+          name: event.target.value
+        })}
       />
+      <select
+        value={movie.genre}
+        onChange={event => setMovie({
+          ...movie,
+          genre: event.target.value
+        })}      >
+        {genres.map(genre => <option key={genre} value={genre}>{genre}</option>)}
+      </select>
       <input
         type='text'
-        value={genre}
-        placeholder='Genre'
-        onChange={event => setGenre(event.target.value)}
-      />
-      <input
-        type='text'
-        value={rating}
+        value={movie.rating}
         placeholder='Rating'
-        onChange={event => setRating(event.target.value)}
+        onChange={event => setMovie({
+          ...movie,
+          rating: event.target.value
+        })}
       />
       <button type='submit' value='Delete'>Delete</button>
     </form>

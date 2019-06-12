@@ -1,49 +1,59 @@
 import React, {useState} from 'react'
-import { apiAddMovie } from '../effects/useApi';
+import axios from 'axios';
 
-const AddMovie = ({onAdd}) => {
-  const [name, setName] = useState('')
-  const [genre, setGenre] = useState('')
-  const [rating, setRating] = useState('')
+const initialMovie = {name: '', genre: '', rating: ''}
+
+const AddMovie = ({onAdd, genres}) => {
+  const [movie, setMovie] = useState(initialMovie)
   const addMovie = () => {
-    const movie = {name: name, genre: genre, rating: rating}
-    const [response, isError] = apiAddMovie(movie)
-    if (!isError) {
-      onAdd(movie)
-      setName('')
-      setGenre('')
-      setRating('')
-    } else {
-      console.log(response);
-    }
+    axios.post(`${process.env.REACT_APP_API_ENDPOINT}/movies`, movie)
+      .then(_ => {
+        onAdd(movie)
+        setMovie({
+          ...movie,
+          name: '',
+          genre: '',
+          rating: ''
+        })
+      })
+      .catch(error => console.log(error))
   }
   return (
     <div className='AddMovie'>
       Add Movie:
       <form
         onSubmit={event => {
-          console.log('SUBMIT')
-          addMovie()
           event.preventDefault()
+          addMovie()
         }}
       >
-        <input 
+        <input
           type='text'
-          value={name}
+          value={movie.name}
           placeholder='Name'
-          onChange={event => setName(event.target.value)}
+          onChange={event => setMovie({
+            ...movie,
+            name: event.target.value
+          })}
         />
+        <select
+          value={movie.genre}
+          onChange={event => setMovie({
+            ...movie,
+            genre: event.target.value
+          })}
+        >
+          <option default>Genre</option>
+          {genres.map(genre => <option key={genre} value={genre}>{genre}</option>)}
+        </select>
         <input
           type='text'
-          value={genre}
-          placeholder='Genre'
-          onChange={event => setGenre(event.target.value)}
-        />
-        <input
-          type='text'
-          value={rating}
+          value={movie.rating}
           placeholder='Rating'
-          onChange={event => setRating(event.target.value)}
+          onChange={event => setMovie({
+            ...movie,
+            rating: event.target.value
+          })}
         />
         <button>Add</button>
       </form>

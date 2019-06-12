@@ -1,19 +1,17 @@
 import React, {useState} from 'react'
 import FavoriteMovie from '../components/FavoriteMovie'
 import AddMovie from '../components/AddMovie'
-import {sortMovieArray, apiDeleteMovie} from '../effects/useApi'
+import axios from 'axios';
 
-const FavoriteMovies = ({props}) => {
-  const [movies, setMovies] = useState(props)
+const FavoriteMovies = ({movies: initialMovies, genres}) => {
+  const [movies, setMovies] = useState(initialMovies)
   const onDelete = name => {
-    const [response, isError] = apiDeleteMovie(name)
-    if (isError) {
-      console.log(response)
-    } else {
-      setMovies(movies
-        .filter(m => m.name !== name)
-        .sort(sortMovieArray))
-    }
+    axios.delete(`${process.env.REACT_APP_API_ENDPOINT}/movies/${name}`)
+      .then(_ => {
+        setMovies(movies
+          .filter(m => m.name !== name))
+      })
+      .catch(error => console.log(error))
   }
 
   const onAdd = movie => {
@@ -27,12 +25,13 @@ const FavoriteMovies = ({props}) => {
       {movies.map(movie =>
         <FavoriteMovie
           key={movie.name}
-          movie={movie}
+          initialMovie={movie}
           onDelete={onDelete}
+          genres={genres}
         />
       )}
     </div>
-    <AddMovie onAdd={onAdd}/>
+    <AddMovie onAdd={onAdd} genres={genres}/>
     </>
   )
 }
