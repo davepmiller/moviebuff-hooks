@@ -15,9 +15,11 @@ const AddMovie = ({onAdd, genres}) => {
           genre: '',
           rating: ''
         })
+        console.log('Added: ', movie)
       })
       .catch(error => console.log(error))
   }
+
   return (
     <div className='AddMovie'>
       Add Movie:
@@ -44,7 +46,9 @@ const AddMovie = ({onAdd, genres}) => {
           })}
         >
           <option default>Genre</option>
-          {genres.map(genre => <option key={genre} value={genre}>{genre}</option>)}
+          {genres.map(genre =>
+            <option key={genre} value={genre}>{genre}</option>)
+          }
         </select>
         <input
           type='text'
