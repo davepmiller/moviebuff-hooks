@@ -4,13 +4,11 @@ import FavoriteMovies from './components/FavoriteMovies'
 
 const App = () => {
   const [movies, isLoading, isError] = useApiGetMovies([])
+  if (isLoading) return <p>Loading...</p>
+  if (isError) return <p>Error fetching data...</p>
   return (
     <div className="App">
-      {isError ? <p>Error fetching data...</p> : ''}
-      {isLoading || movies.length === 0
-        ? <p>Loading...</p>
-        : <FavoriteMovies props={movies}/>
-      }
+      <FavoriteMovies props={movies}/>
     </div>
   )
 }

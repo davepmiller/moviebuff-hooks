@@ -1,14 +1,19 @@
 import React, {useState} from 'react'
 import FavoriteMovie from '../components/FavoriteMovie'
 import AddMovie from '../components/AddMovie'
-import {sortMovieArray} from '../effects/useApi'
+import {sortMovieArray, apiDeleteMovie} from '../effects/useApi'
 
 const FavoriteMovies = ({props}) => {
   const [movies, setMovies] = useState(props)
   const onDelete = name => {
-    setMovies(movies
-      .filter(m => m.name !== name)
-      .sort(sortMovieArray))
+    const [response, isError] = apiDeleteMovie(name)
+    if (isError) {
+      console.log(response)
+    } else {
+      setMovies(movies
+        .filter(m => m.name !== name)
+        .sort(sortMovieArray))
+    }
   }
 
   const onAdd = movie => {

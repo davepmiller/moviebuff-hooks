@@ -6,6 +6,7 @@ const FavoriteMovie = ({movie, onDelete}) => {
   const [rating, setRating] = useState(movie.rating)
   return (
     <form onSubmit={event => {
+      console.log('DELETE')
       onDelete(name)
       event.preventDefault()
     }}>
