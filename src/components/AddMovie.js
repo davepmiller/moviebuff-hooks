@@ -1,24 +1,12 @@
 import React, {useState} from 'react'
-import axios from 'axios';
+import NameField from './NameField';
+import GenreSelect from './GenreSelect';
+import RatingField from './RatingField';
 
 const initialMovie = {name: '', genre: '', rating: ''}
 
 const AddMovie = ({onAdd, genres}) => {
   const [movie, setMovie] = useState(initialMovie)
-  const addMovie = () => {
-    axios.post(`${process.env.REACT_APP_API_ENDPOINT}/movies`, movie)
-      .then(_ => {
-        onAdd(movie)
-        setMovie({
-          ...movie,
-          name: '',
-          genre: '',
-          rating: ''
-        })
-        console.log('Added: ', movie)
-      })
-      .catch(error => console.log(error))
-  }
 
   return (
     <div className='AddMovie'>
@@ -26,39 +14,18 @@ const AddMovie = ({onAdd, genres}) => {
       <form
         onSubmit={event => {
           event.preventDefault()
-          addMovie()
+          setMovie({
+            ...movie,
+            name: '',
+            genre: '',
+            rating: ''
+          })
+          onAdd(movie)
         }}
       >
-        <input
-          type='text'
-          value={movie.name}
-          placeholder='Name'
-          onChange={event => setMovie({
-            ...movie,
-            name: event.target.value
-          })}
-        />
-        <select
-          value={movie.genre}
-          onChange={event => setMovie({
-            ...movie,
-            genre: event.target.value
-          })}
-        >
-          <option default>Genre</option>
-          {genres.map(genre =>
-            <option key={genre} value={genre}>{genre}</option>)
-          }
-        </select>
-        <input
-          type='text'
-          value={movie.rating}
-          placeholder='Rating'
-          onChange={event => setMovie({
-            ...movie,
-            rating: event.target.value
-          })}
-        />
+        <NameField movie={movie} setMovie={setMovie}/>
+        <GenreSelect movie={movie} genres={genres} setMovie={setMovie}/>
+        <RatingField movie={movie} genres={genres} setMovie={setMovie}/>
         <button>Add</button>
       </form>
     </div>

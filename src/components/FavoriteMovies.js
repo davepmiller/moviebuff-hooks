@@ -1,36 +1,20 @@
 import React, {useState} from 'react'
 import FavoriteMovie from '../components/FavoriteMovie'
 import AddMovie from '../components/AddMovie'
-import axios from 'axios';
-
-const getCleanUrl = movieName => {
-  return `${process.env.REACT_APP_API_ENDPOINT}/movies/${encodeURIComponent(movieName)}`
-}
+import * as http from '../httpClient'
 
 const FavoriteMovies = ({movies: initialMovies, genres}) => {
   const [movies, setMovies] = useState(initialMovies)
   const onDelete = name => {
-    axios.delete(getCleanUrl(name))
-      .then(_ => {
-        setMovies(movies
-          .filter(m => m.name !== name))
-        console.log('Deleted: ', name)
-      })
-      .catch(error => console.log(error))
+    http.deleteMovie(name, movies, setMovies)
   }
 
   const onAdd = movie => {
-    setMovies([...movies, movie])
+    http.createMovie(movie, movies, setMovies)
   }
 
   const onUpdate = (movie, oldName) => {
-    axios.put(getCleanUrl(oldName), movie)
-      .then(_ => {
-        movies.forEach(m => m.name === oldName ? movie : m)
-        setMovies(movies)
-        console.log('Updated: ', movie.name)
-      })
-      .catch(error => console.log(error))
+    http.updateMovie(oldName, movie, movies, setMovies)
   }
 
   return (
@@ -47,7 +31,7 @@ const FavoriteMovies = ({movies: initialMovies, genres}) => {
         />
       )}
     </div>
-    <AddMovie onAdd={onAdd} genres={genres}/>
+    <AddMovie genres={genres} onAdd={onAdd}/>
     </>
   )
 }

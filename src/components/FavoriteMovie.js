@@ -1,54 +1,33 @@
 import React, {useState} from 'react'
+import NameField from './NameField'
+import GenreSelect from './GenreSelect'
+import RatingField from './RatingField'
 
 const FavoriteMovie = ({initialMovie, genres, onDelete, onUpdate}) => {
   const [movie, setMovie] = useState(initialMovie)
+
   return (
     <form onSubmit={event => {
       event.preventDefault()
       onDelete(movie.name)
     }}>
-      <input
-        type='text'
-        value={movie.name}
-        placeholder='Name'
-        onChange={event => {
-          const updatedMovie = {
-            ...movie,
-            name: event.target.value
-          }
-          setMovie(updatedMovie)
-          onUpdate(updatedMovie, movie.name)
-        }}
+      <NameField
+        movie={movie}
+        onUpdate={onUpdate}
+        setMovie={setMovie}
       />
-      <select
-        value={movie.genre}
-        onChange={event => {
-          const updatedMovie = {
-            ...movie,
-            genre: event.target.value
-          }
-          setMovie(updatedMovie)
-          onUpdate(updatedMovie, movie.name)
-        }}
-        >
-        {genres.map(genre =>
-          <option key={genre} value={genre}>{genre}</option>)
-        }
-      </select>
-      <input
-        type='text'
-        value={movie.rating}
-        placeholder='Rating'
-        onChange={event => {
-          const updatedMovie = {
-            ...movie,
-            rating: event.target.value
-          }
-          setMovie(updatedMovie)
-          onUpdate(updatedMovie, movie.name)
-        }}
+      <GenreSelect
+        movie={movie}
+        genres={genres}
+        onUpdate={onUpdate}
+        setMovie={setMovie}
       />
-      <button type='submit' value='Delete'>Delete</button>
+      <RatingField
+        movie={movie}
+        onUpdate={onUpdate}
+        setMovie={setMovie}
+      />
+      <button>Delete</button>
     </form>
   )
 }
